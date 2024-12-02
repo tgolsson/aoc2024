@@ -29,8 +29,7 @@
                (map #(apply - %)))
         sign (clojure.math/signum (first d))]
 
-    (every? #(and (<= 1 (abs %) 3)
-                  (== sign (clojure.math/signum %))) d)))
+    (every? #(<= 1 (* % sign) 3) d)))
 
 (defn dampen [line]
   (some #(line-safe (vec-remove % (into [] line))) (range (count line))))
