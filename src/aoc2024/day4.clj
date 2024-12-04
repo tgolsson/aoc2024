@@ -41,17 +41,17 @@
 
     [(->> [(convolve [4 1] #(if (is-xmas (into [] (flatten %))) 1 0) listified)
            (convolve [1 4] #(if (is-xmas (into [] (flatten %))) 1 0) listified)
-           (convolve [4  4] (fn [[a b c d]]
-                              (match [a b c d]
-                                [[\X _ _ \S] [_ \M \A _] [_ \M \A _] [\X _ _ \S]] 2
-                                [[\S _ _ \S] [_ \A \A _] [_ \M \M _] [\X _ _ \X]] 2
-                                [[\S _ _ \X] [_ \A \M _] [_ \A \M _] [\S _ _ \X]] 2
-                                [[\X _ _ \X] [_ \M \M _] [_ \A \A _] [\S _ _ \S]] 2
-                                [[\X _ _ _] [_ \M _ _] [_ _ \A _] [_ _ _ \S]] 1
-                                [[\S _ _ _] [_ \A _ _] [_ _ \M _] [_ _ _ \X]] 1
-                                [[_ _ _ \X] [_ _ \M _] [_ \A _ _] [\S _ _ _]] 1
-                                [[_ _ _ \S] [_ _ \A _] [_ \M _ _] [\X _ _ _]] 1
-                                :else 0)) listified)]
+           (convolve [4 4] (fn [[a b c d]]
+                             (match [a b c d]
+                               [[\X _ _ \S] [_ \M \A _] [_ \M \A _] [\X _ _ \S]] 2
+                               [[\S _ _ \S] [_ \A \A _] [_ \M \M _] [\X _ _ \X]] 2
+                               [[\S _ _ \X] [_ \A \M _] [_ \A \M _] [\S _ _ \X]] 2
+                               [[\X _ _ \X] [_ \M \M _] [_ \A \A _] [\S _ _ \S]] 2
+                               [[\X _ _ _] [_ \M _ _] [_ _ \A _] [_ _ _ \S]] 1
+                               [[\S _ _ _] [_ \A _ _] [_ _ \M _] [_ _ _ \X]] 1
+                               [[_ _ _ \X] [_ _ \M _] [_ \A _ _] [\S _ _ _]] 1
+                               [[_ _ _ \S] [_ _ \A _] [_ \M _ _] [\X _ _ _]] 1
+                               :else 0)) listified)]
           flatten
           sum)
      (->> listified
