@@ -27,3 +27,7 @@
 (defn vec-remove
   [pos coll]
   (into (subvec coll 0 pos) (subvec coll (inc pos))))
+
+(defn sum
+  ([coll]     (reduce + coll))
+  ([val coll] (reduce + val coll)))

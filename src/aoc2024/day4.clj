@@ -17,9 +17,6 @@
    "MAMMMXMMMM"
    "MXMXAXMASX"))
 
-(defn transpose [& lists]
-  (map #(into [] %) (apply map list lists)))
-
 (defn is-xmas [v]
   (or (= v [\X \M \A \S]) (= v [\S \A \M \X])))
 
@@ -28,10 +25,6 @@
        (partition k1 stride)
        (mapv (fn [%] (zip (mapv #(mapv vec (partition k2 stride %)) %))))
        (mapv #(map kernel %))))
-
-(defn sum
-  ([coll]     (reduce + coll))
-  ([val coll] (reduce + val coll)))
 
 (defn solve [reader]
   (let [listified (->> reader
