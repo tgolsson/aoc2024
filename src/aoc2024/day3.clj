@@ -1,4 +1,4 @@
-(ns aoc2024.day2
+(ns aoc2024.day3
   (:require [aoc2024.util :refer :all]))
 
 (def example "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))")
@@ -21,11 +21,11 @@
 
 (defn solve [pairs]
   [(->> pairs
-        (map (fn [[a b ]] (* a b)))
+        (map (fn [[a b]] (* a b)))
         (reduce +))
 
    (->> pairs
-        (map (fn [[a b enabled ]] [a b (if enabled 1 0)]))
+        (map (fn [[a b enabled]] [a b (if enabled 1 0)]))
         (map #(apply * %))
         (reduce +))])
 

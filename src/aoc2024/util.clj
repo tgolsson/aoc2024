@@ -9,7 +9,7 @@
     (map first iter)))
 
 (defn zip [colls]
-  (partition (count colls) (apply interleave colls)))
+  (into [] (partition (count colls) (apply interleave colls))))
 
 (defn count-occurrences [s slist]
   (->> slist
