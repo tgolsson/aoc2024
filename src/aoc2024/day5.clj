@@ -82,7 +82,7 @@
 
 (defn solve [[constraints orders]]
   (let [validity (group-by #(validate-constraints constraints %) orders)]
-    (mapv #(->> % (map middle) sum)
+    (mapv #(->> % (mapv middle) sum)
           [(get validity true)
            (map #(reorder constraints [] %) (get validity false))])))
 
