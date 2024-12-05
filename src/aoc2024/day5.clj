@@ -50,7 +50,7 @@
           (mapv #(split-parse "," %)))]))
 
 (defn validate-constraint [constraints page previous]
-  (every? (fn [constraint]  (not (some #(= % (:must-before constraint)) previous)))
+  (every? (fn [constraint] (not (some #(= % (:must-before constraint)) previous)))
           (find-all #(= (:page %) page) constraints)))
 
 (defn validate-constraint-future [constraints page remainder]
@@ -74,15 +74,14 @@
     prefix
     (->> remainder
          (map-indexed (fn [a b] [a b]))
-         (filter (fn [[i %]] (and (validate-constraint constraints % prefix)
-                                  (validate-constraint-future constraints % (vec-remove i remainder)))))
-         (map (fn [[i page]] (reorder constraints (conj prefix page) (vec-remove i remainder))))
-         (filter some?)
+         (keep (fn [[i page]] (when (and (validate-constraint constraints page prefix)
+                                         (validate-constraint-future constraints page (vec-remove i remainder)))
+                                (reorder constraints (conj prefix page) (vec-remove i remainder)))))
          first)))
 
 (defn solve [[constraints orders]]
   (let [validity (group-by #(validate-constraints constraints %) orders)]
-    (mapv #(->> % (mapv middle) sum)
+    (mapv #(->> % (map middle) sum)
           [(get validity true)
            (map #(reorder constraints [] %) (get validity false))])))
 
