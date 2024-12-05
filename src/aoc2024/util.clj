@@ -20,9 +20,11 @@
 (defn string-reader [str]
   (BufferedReader. (StringReader. str)))
 
-(defn inspect [arg]
-  (println arg)
-  arg)
+(defn inspect
+  ([arg]
+   (println arg) arg)
+  ([message arg]
+   (println message arg) arg))
 
 (defn vec-remove
   [pos coll]
@@ -31,3 +33,14 @@
 (defn sum
   ([coll]     (reduce + coll))
   ([val coll] (reduce + val coll)))
+
+(defn find-all
+  [f coll]
+  (filter f coll))
+
+(defn find-first
+  [f coll]
+  (first (filter f coll)))
+
+(defn middle [coll]
+  (nth coll (/ (count coll) 2)))
