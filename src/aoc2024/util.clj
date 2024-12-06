@@ -1,4 +1,6 @@
 (ns aoc2024.util
+  (:require [clojure.math]
+            [clojure.string])
   (:import (java.io BufferedReader StringReader)))
 
 (defn multi-line [& strings] (clojure.string/join "\n" strings))
@@ -44,3 +46,5 @@
 
 (defn middle [coll]
   (nth coll (/ (count coll) 2)))
+
+(defn int-sign [v] (int (clojure.math/signum v)))
