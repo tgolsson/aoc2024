@@ -36,18 +36,16 @@
                 tail (rest rem)]
             (not (not-any? #(pick-one-recurse tv (% value head) tail fs) fs)))))
 
-(defn solve-testcase [[tv values] fs]
-  (pick-one-recurse tv (nth values 0) (rest values) fs))
-
 (defn solve [tests]
-  [(->> tests
-        (filter #(solve-testcase % [* +]))
-        (map first)
-        sum)
-   (->> tests
-        (filter #(solve-testcase % [* + int-cat]))
-        (map first)
-        sum)])
+  (let [valid (group-by (fn [[tv values]] (pick-one-recurse tv (nth values 0) (rest values) [+ *])) tests)
+        part1 (->> (get valid true)
+                   (map #(nth % 0))
+                   sum)]
+    [part1
+     (+ part1 (->> (get valid false)
+                   (filter (fn [[tv values]] (pick-one-recurse tv (nth values 0) (rest values) [+ * int-cat])))
+                   (map #(nth % 0))
+                   sum))]))
 
 (defn -main []
   (assert (= (inspect (solve (parse (string-reader example)))) [3749 11387]))
