@@ -48,3 +48,13 @@
   (nth coll (/ (count coll) 2)))
 
 (defn int-sign [v] (int (clojure.math/signum v)))
+
+(defn exp [x n]
+  (reduce * (repeat n x)))
+
+(defn num-digits [n]
+  (loop [count 0
+         remainder n]
+    (if (> remainder 0)
+      (recur (inc count) (int (/ remainder 10)))
+      count)))
