@@ -66,10 +66,10 @@
 (defn antinodes-of [grid max-range a b]
   (let [step (v2-step a b)
         valid? (inside-grid? grid)]
-    (inspect (concat (for [[_ pos]  (zipmap (range max-range) (iterate #(v2- % step) (v2- a step)))
+    (inspect (concat (if (> max-range 1) [a b] []) (for [[_ pos]  (map vector (range max-range) (iterate #(v2- % step) (v2- a step)))
                            :while (valid? pos)]
                        pos)
-                     (for [[_ pos] (zipmap (range max-range) (iterate #(v2+ % step) (v2+ b step)))
+                     (for [[_ pos] (map vector (range max-range) (iterate #(v2+ % step) (v2+ b step)))
                            :while (valid? pos)]
                        pos)))))
 
@@ -103,7 +103,7 @@
   (let [frequencies (node-frequencies grid)
         freq-to-positions (map #(node-locations grid %) frequencies)]
     [(count (set (filter (inside-grid? grid) (apply concat (map #(gen-antinodes grid % 1) freq-to-positions)))))
-     (count (set (filter (inside-grid? grid) (apply concat (map #(gen-antinodes grid % 50) freq-to-positions)))))]))
+     (count (set (filter (inside-grid? grid) (apply concat (map #(gen-antinodes grid % 100) freq-to-positions)))))]))
 
 (defn -main []
   (assert (= (inspect (solve (parse (string-reader example)))) [14 34]))
