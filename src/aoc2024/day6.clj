@@ -25,28 +25,11 @@
                                            \# 1
                                            \^ 2)) line)))))
 
-(defmacro get-at [grid pos]
-  `(nth
-    (nth ~grid (nth ~pos 1)) (nth ~pos 0)))
-
 (defn get-starting-position [grid]
   (first (for [y (range (count grid))
                x (range (count (nth grid 0)))
                :when (= 2 (get-at grid [x y]))]
            [x y])))
-
-(defn grid-dimensions [grid]
-  [(count (get grid 0)) (count grid)])
-
-(defmacro vx [a]
-  `(get ~a 0))
-
-(defmacro vy [a]
-  `(get ~a 1))
-
-(defmacro v2+ [a b]
-  `[(+ (vx ~a) (vx ~b))
-    (+ (vy ~a) (vy ~b))])
 
 (defn next-direction [direction]
   (case direction
