@@ -58,3 +58,34 @@
     (if (> remainder 0)
       (recur (inc count) (int (/ remainder 10)))
       count)))
+
+(defmacro vx [a]
+  `(get ~a 0))
+
+(defmacro vy [a]
+  `(get ~a 1))
+
+(defmacro v2+ [a b]
+  `[(+ (vx ~a) (vx ~b))
+    (+ (vy ~a) (vy ~b))])
+
+(defmacro v2- [a b]
+  `[(- (vx ~a) (vx ~b))
+    (- (vy ~a) (vy ~b))])
+
+(defmacro get-at [grid pos]
+  `(nth
+    (nth ~grid (nth ~pos 1)) (nth ~pos 0)))
+
+(defn grid-dimensions [grid]
+  [(count (get grid 0)) (count grid)])
+
+(defn inside-grid?
+  ([dims position]
+   (not (or (< (vx position) 0)
+            (< (vy position) 0)
+            (>= (vx position) (vx dims))
+            (>= (vy position) (vy dims)))))
+  ([grid]
+   (let [dims (grid-dimensions grid)]
+     (fn [position] (inside-grid? dims position)))))
