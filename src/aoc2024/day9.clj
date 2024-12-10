@@ -51,9 +51,9 @@
                                       (insert (+ (first head) 1) (update-in (nth disk (first head)) [2] #(- % tail-len))))))))))
 
 (defn solve [[used free]]
-  (let [disk  (vec (apply concat (apply map list [(map-indexed (fn [i len] [:u i len]) used) (map-indexed (fn [i len] [:f 0 len]) free)])))]
-    [(checksum (part-1 disk))
-     (checksum (part-2 disk))]))
+  (let [disk  (vec (apply concat (apply map list [(map-indexed (fn [i len] [:u i len]) used) (map-indexed (fn [_ len] [:f 0 len]) free)])))]
+    [(time (checksum (part-1 disk)))
+     (time (checksum (part-2 disk)))]))
 
 (defn -main []
   (assert (= (inspect (solve (parse example))) [1928 2858]))

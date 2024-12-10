@@ -56,7 +56,7 @@
   (loop [count 0
          remainder n]
     (if (> remainder 0)
-      (recur (inc count) (int (/ remainder 10)))
+      (recur (inc count) (long (/ remainder 10)))
       count)))
 
 (defmacro vx [a]
@@ -89,3 +89,10 @@
   ([grid]
    (let [dims (grid-dimensions grid)]
      (fn [position] (inside-grid? dims position)))))
+
+(defn grid-where [grid value]
+  (for [y (range (count grid))
+        x (range (count (nth grid 0)))
+        :let [pos [x y]]
+        :when (= (get-at grid pos) value)]
+    pos))

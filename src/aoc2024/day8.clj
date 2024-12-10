@@ -25,11 +25,7 @@
 (defn node-frequencies [grid]
   (difference (set (flatten grid)) #{\.}))
 
-(defn node-locations [grid freq]
-  (for [y (range (count grid))
-        x (range (count (nth grid 0)))
-        :when (= (get-at grid [x y]) freq)]
-    [x y]))
+(def node-locations grid-where)
 
 (defn trace [valid? max-range iter]
   (for [[_ pos] (map vector (range max-range) iter)
