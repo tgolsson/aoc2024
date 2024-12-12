@@ -77,6 +77,11 @@
   `(nth
     (nth ~grid (nth ~pos 1)) (nth ~pos 0)))
 
+(defn get-at-safe [grid is-valid? location]
+  (if (is-valid? location)
+    (get-at grid location)
+    nil))
+
 (defn grid-dimensions [grid]
   [(count (get grid 0)) (count grid)])
 
@@ -96,3 +101,21 @@
         :let [pos [x y]]
         :when (= (get-at grid pos) value)]
     pos))
+
+(defn linspace [dims]
+  (for [y (range (vy dims))
+        x (range (vx dims))]
+    [x y]))
+
+(def vn-neighbours [[1 0] [-1 0] [0 1] [0 -1]])
+
+(defn neighbours-of [location]
+  (for [offset vn-neighbours
+        :let [n (v2+ location offset)]]
+    n))
+
+(defn neighbours-with-value [grid location wanted valid?]
+  (for [offset vn-neighbours
+        :let [n (v2+ location offset)]
+        :when (and (valid? n) (= (get-at grid n) wanted))]
+    n))
