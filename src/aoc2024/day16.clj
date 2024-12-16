@@ -53,10 +53,6 @@
           next-pos
           (recur next-pos (v2+ next-pos dir)))))))
 
-(defn manhattan [[x1 y1] [x2 y2]]
-  (+ (Math/abs (- x1 x2))
-     (Math/abs (- y1 y2))))
-
 (defn print-jump-map [jump-map]
   (let [[w h]  (grid-dimensions jump-map)
         print-w (* 7 w)
@@ -105,10 +101,13 @@
                                                   [[0 -1] [1 0] [0 1] [-1 0]])))
                (inc x) y)))))
 
+(defn turn-cost [dir new-dir]
+  (cond (v2= dir new-dir) 0
+        (v2= (v2*s dir -1) new-dir) 2000
+        :else 1000))
+
 (defn heuristic [pos end dir new-dir]
-  (+ (manhattan pos end) (cond (v2= dir new-dir) 0
-                               (v2= (v2*s dir -1) new-dir) 2000
-                               :else 1000)))
+  (+ (manhattan pos end) (turn-cost dir new-dir)))
 
 (defrecord Node [position direction g h visited previous])
 
@@ -124,28 +123,29 @@
       (printf "%10d: %s %10d %10d\n" step (str (:position node)) (+ (:g node) (:h node)) (count nodes)))
 
     (cond
+      ;; no more nodes
       (not (some? node)) solutions
+      ;; all remaining nodes are worse than the best solution
       (and (seq  solutions) (< (:g (peek solutions))  (:g node))) solutions
+      ;; we have a solution but more nodes to explore
       (and (v2= (:position node) end) (empty? solutions)) (recur (second (first nodes)) (pop nodes) expanded (conj solutions node) (:g node) (inc step))
+        ;; we have a solution and no more nodes to explore
       (and (v2= (:position node) end) (empty? nodes)) solutions
+        ;; we have a solution and more nodes to explore
       (v2= (:position node) end) (recur (second (first nodes)) (pop nodes) expanded (conj solutions node) solution (inc step))
+      ;; we have a node to explore
       :else
       (let [[up right down left] (get-at jump-map (:position node))
             children (for [[new-dir distance] [[[0 -1] up] [[1 0] right] [[0 1] down] [[-1 0] left]]
                            :when (not (= distance 0))
                            :let [new-pos (v2+ (:position node) (v2*s new-dir distance))
-                                 new-node (Node. new-pos
-                                                 new-dir
-                                                 (+ (:g node) distance (cond (v2= (:direction node) new-dir) 0
-                                                                             (v2= (v2*s (:direction node) -1) new-dir) 2000
-                                                                             :else 1000))
+                                 new-node (Node. new-pos new-dir (+ (:g node) distance (turn-cost (:direction node) new-dir))
                                                  (heuristic new-pos end (:direction node) new-dir)
                                                  (conj (:visited node) (:position node))
                                                  (conj (:previous node) (:position node)))]
                            :when (not (contains? (:visited node) new-pos))
                            :when (or (not (contains? expanded [new-pos new-dir]))
-                                     (<= (:g new-node) (get expanded [new-pos new-dir])))
-                           :when (<= (:g node) 105508)]
+                                     (<= (:g new-node) (get expanded [new-pos new-dir])))]
                        new-node)
 
             all-nodes (into nodes (map (fn [child] [child child]) children))
@@ -166,18 +166,18 @@
       (= dy -1.0) (reverse (for [y (range  (vy b) (inc (vy a)))] [(vx a) y])))))
 
 (defn expand-path [path]
-  (apply concat (for [[a b] (partition 2 1  path)]
+  (apply concat (for [[a b] (partition 2 1 path)]
                   (expand-waypoints a b))))
 
 (defn search [grid]
-  (let [start (first (filter #(= \S (get-at grid %)) (linspace (grid-dimensions grid))))
-        end (first (filter #(= \E (get-at grid %)) (linspace (grid-dimensions grid))))
+  (let [start (first (grid-where grid \S))
+        end (first (grid-where grid \E))
         jump-map (make-jump-map (-> grid
                                     (assoc-in [(vy end) (vx end)] \.)
                                     (assoc-in  [(vy start) (vx start)] \.)))
-        paths  (search-iterative jump-map start  end)]
+        paths (search-iterative jump-map start  end)]
     [(:g (first paths))
-     (count (set   (apply concat (map (comp expand-path #(conj (:previous %) (:position %))) paths))))]))
+     (count (set (apply concat (map (comp expand-path #(conj (:previous %) (:position %))) paths))))]))
 
 (defn -main []
   (assert (= (inspect (search (parse (string-reader example)))) [7036 45]))
