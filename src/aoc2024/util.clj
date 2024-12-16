@@ -73,6 +73,14 @@
   `[(- (vx ~a) (vx ~b))
     (- (vy ~a) (vy ~b))])
 
+(defmacro v2= [a b]
+  `(and (= (vx ~a) (vx ~b))
+        (= (vy ~a) (vy ~b))))
+
+(defmacro v2*s [a b]
+  `[(* (vx ~a) ~b)
+    (* (vy ~a)  ~b)])
+
 (defmacro get-at [grid pos]
   `(nth
     (nth ~grid (nth ~pos 1)) (nth ~pos 0)))
