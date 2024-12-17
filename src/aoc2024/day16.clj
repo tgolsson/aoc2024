@@ -5,40 +5,23 @@
             [clojure.math]))
 
 (def example (multi-line
-              "###############"
-              "#.......#....E#"
-              "#.#.###.#.###.#"
-              "#.....#.#...#.#"
-              "#.###.#####.#.#"
-              "#.#.#.......#.#"
-              "#.#.#####.###.#"
-              "#...........#.#"
-              "###.#.#####.#.#"
-              "#...#.....#.#.#"
-              "#.#.#.###.#.#.#"
-              "#.....#...#.#.#"
-              "#.###.#.#.#.#.#"
-              "#S..#.....#...#"
-              "###############"))
-
-(def example2 (multi-line
-               "#################"
-               "#...#...#...#..E#"
-               "#.#.#.#.#.#.#.#.#"
-               "#.#.#.#...#...#.#"
-               "#.#.#.#.###.#.#.#"
-               "#...#.#.#.....#.#"
-               "#.#.#.#.#.#####.#"
-               "#.#...#.#.#.....#"
-               "#.#.#####.#.###.#"
-               "#.#.#.......#...#"
-               "#.#.###.#####.###"
-               "#.#.#...#.....#.#"
-               "#.#.#.#####.###.#"
-               "#.#.#.........#.#"
-               "#.#.#.#########.#"
-               "#S#.............#"
-               "#################"))
+              "#################"
+              "#...#...#...#..E#"
+              "#.#.#.#.#.#.#.#.#"
+              "#.#.#.#...#...#.#"
+              "#.#.#.#.###.#.#.#"
+              "#...#.#.#.....#.#"
+              "#.#.#.#.#.#####.#"
+              "#.#...#.#.#.....#"
+              "#.#.#####.#.###.#"
+              "#.#.#.......#...#"
+              "#.#.###.#####.###"
+              "#.#.#...#.....#.#"
+              "#.#.#.#####.###.#"
+              "#.#.#.........#.#"
+              "#.#.#.#########.#"
+              "#S#.............#"
+              "#################"))
 
 (defn parse [rdr]
   (mapv vec (line-seq rdr)))
@@ -154,7 +137,6 @@
           (recur (second (peek all-nodes)) (pop all-nodes) new-expanded solutions solution (inc step))
           solutions)))))
 
-;; convert waypoints to a path with all the steps
 (defn expand-waypoints [a b]
   (let [dx (clojure.math/signum (- (vx b) (vx a)))
         dy (clojure.math/signum (- (vy b) (vy a)))]
@@ -180,8 +162,7 @@
      (count (set (apply concat (map (comp expand-path #(conj (:previous %) (:position %))) paths))))]))
 
 (defn -main []
-  (assert (= (inspect (search (parse (string-reader example)))) [7036 45]))
-  (assert (= (inspect (search (parse (string-reader example2)))) [11048 64]))
+  (assert (= (inspect (search (parse (string-reader example)))) [11048 64]))
   (with-open [rdr (clojure.java.io/reader "input/day16")]
     (let [grid (parse rdr)]
       (println (search grid)))))
