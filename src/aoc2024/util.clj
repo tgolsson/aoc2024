@@ -69,6 +69,10 @@
   `[(+ (vx ~a) (vx ~b))
     (+ (vy ~a) (vy ~b))])
 
+(defmacro v2*s [a b]
+  `[(* (vx ~a) ~b)
+    (* (vy ~a) ~b)])
+
 (defmacro v2- [a b]
   `[(- (vx ~a) (vx ~b))
     (- (vy ~a) (vy ~b))])
@@ -77,10 +81,6 @@
   `(and (= (vx ~a) (vx ~b))
         (= (vy ~a) (vy ~b))))
 
-(defmacro v2*s [a b]
-  `[(* (vx ~a) ~b)
-    (* (vy ~a)  ~b)])
-
 (defn manhattan [[x1 y1] [x2 y2]]
   (+ (Math/abs (- x1 x2))
      (Math/abs (- y1 y2))))
@@ -88,6 +88,9 @@
 (defmacro get-at [grid pos]
   `(nth
     (nth ~grid (nth ~pos 1)) (nth ~pos 0)))
+
+(defn set-at [grid [x y] v]
+  (assoc-in grid [y x] v))
 
 (defn get-at-safe [grid is-valid? location]
   (if (is-valid? location)
