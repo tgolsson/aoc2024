@@ -57,10 +57,6 @@
           ;; cdv
           7 (recur (+ ip 2) (assoc-in regs [2] (bit-shift-right (first regs) op-v)) output))))))
 
-(defn is-prefix? [prefix coll]
-  (and (<= (count prefix) (count coll))
-       (every? (fn [[a b]] (= a b)) (zip [prefix coll]))))
-
 (defn search-a [program s]
 
   (first (filter some? (for [a (range s (+ s 8))

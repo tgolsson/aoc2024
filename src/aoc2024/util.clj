@@ -134,3 +134,7 @@
         :let [n (v2+ location offset)]
         :when (and (valid? n) (= (get-at grid n) wanted))]
     n))
+
+(defn is-prefix? [prefix coll]
+  (and (<= (count prefix) (count coll))
+       (every? (fn [[a b]] (= a b)) (zip [prefix coll]))))
